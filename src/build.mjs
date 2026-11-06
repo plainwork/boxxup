@@ -117,6 +117,7 @@ ${intro ? `<script>${INTRO}</script>\n` : ""}<link rel="stylesheet" href="/asset
 ${body}
 </main>
 <footer class="statusbar">
+  <span class="note">${site.note.split(" · ").map((s) => `<span class="whitespace-nowrap">${esc(s)}</span>`).join(" · ")}</span>
   <span class="flash" data-flash role="status" aria-live="polite"></span>
   <span class="hints">${hints.map(([k, l]) => key(k, l)).join(` ${sep} `)}</span>
 </footer>
@@ -127,6 +128,21 @@ ${body}
       ${THEMES.map(([id, name, note, sw]) => `<button type="button" role="radio" aria-checked="false" data-theme-id="${id}"><span class="dot" aria-hidden="true"></span><span class="name">${esc(name)}</span><span class="note">${esc(note)}</span><span class="sw" aria-hidden="true">${sw.map((c) => `<i style="background:${c}"></i>`).join("")}</span></button>`).join("\n      ")}
     </div>
     <p class="modal-keys">${[["↑/k", "up"], ["↓/j", "down"], ["enter", "pick"], ["esc", "cancel"]].map(([k, l]) => key(k, l)).join(` ${sep} `)}</p>
+  </div>
+</div>
+<div class="modal-wrap" id="copy-modal" hidden>
+  <div class="modal modal--note" role="alertdialog" aria-modal="true" aria-labelledby="copy-title" aria-describedby="copy-body">
+    <h2 class="modal-title" id="copy-title">before you run it</h2>
+    <div class="modal-body" id="copy-body">
+      <p><span class="ok">✓</span> copied to your clipboard</p>
+      ${site.disclaimer.map((p) => `<p>${esc(p)}</p>`).join("\n      ")}
+    </div>
+    <p class="modal-actions">
+      <a class="btn" href="https://get.boxxup.com" target="_blank" rel="noopener" data-note-key="i" aria-keyshortcuts="i"><span class="u">i</span>nstaller src</a>
+      <a class="btn" href="${site.repo}" target="_blank" rel="noopener" data-note-key="b" aria-keyshortcuts="b"><span class="u">b</span>oxx src</a>
+      <button type="button" class="btn btn--primary" data-close data-note-key="g" aria-keyshortcuts="g"><span class="u">g</span>ot it</button>
+    </p>
+    <p class="modal-keys">${[["enter", "got it"], ["esc", "close"]].map(([k, l]) => key(k, l)).join(` ${sep} `)}</p>
   </div>
 </div>
 </body>

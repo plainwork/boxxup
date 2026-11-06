@@ -10,6 +10,12 @@ export const site = {
   repo: "https://github.com/plainwork/boxx",
   install: "curl https://get.boxxup.com | sh",
   next: "boxx install <image> --host <hostname>",
+  // The footer line, and the modal shown whenever someone copies the install command.
+  note: "a personal project · not for critical production apps",
+  disclaimer: [
+    "boxx is a personal project. It works, and I run my own production sites on it, but it's built for how I work, not as a supported product.",
+    "It isn't meant for critical production apps. If you use it, you're on your own: read the code, test it on your setup and keep backups.",
+  ],
 };
 
 // The intro plays these the way the TUI's deploy modal does (strings from engine/installer).

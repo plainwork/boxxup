@@ -60,6 +60,7 @@
 </section>
 </main>
 <footer class="statusbar">
+  <span class="note"><span class="whitespace-nowrap">a personal project</span> · <span class="whitespace-nowrap">not for critical production apps</span></span>
   <span class="flash" data-flash role="status" aria-live="polite"></span>
   <span class="hints"><span class="key">c</span> copy install <span class="sep" aria-hidden="true">·</span> <span class="key">t</span> theme</span>
 </footer>
@@ -76,6 +77,22 @@
       <button type="button" role="radio" aria-checked="false" data-theme-id="borland"><span class="dot" aria-hidden="true"></span><span class="name">borland</span><span class="note">blue screen, cyan bars</span><span class="sw" aria-hidden="true"><i style="background:#0000aa"></i><i style="background:#00aaaa"></i><i style="background:#ffff55"></i></span></button>
     </div>
     <p class="modal-keys"><span class="key">↑/k</span> up <span class="sep" aria-hidden="true">·</span> <span class="key">↓/j</span> down <span class="sep" aria-hidden="true">·</span> <span class="key">enter</span> pick <span class="sep" aria-hidden="true">·</span> <span class="key">esc</span> cancel</p>
+  </div>
+</div>
+<div class="modal-wrap" id="copy-modal" hidden>
+  <div class="modal modal--note" role="alertdialog" aria-modal="true" aria-labelledby="copy-title" aria-describedby="copy-body">
+    <h2 class="modal-title" id="copy-title">before you run it</h2>
+    <div class="modal-body" id="copy-body">
+      <p><span class="ok">✓</span> copied to your clipboard</p>
+      <p>boxx is a personal project. It works, and I run my own production sites on it, but it's built for how I work, not as a supported product.</p>
+      <p>It isn't meant for critical production apps. If you use it, you're on your own: read the code, test it on your setup and keep backups.</p>
+    </div>
+    <p class="modal-actions">
+      <a class="btn" href="https://get.boxxup.com" target="_blank" rel="noopener" data-note-key="i" aria-keyshortcuts="i"><span class="u">i</span>nstaller src</a>
+      <a class="btn" href="https://github.com/plainwork/boxx" target="_blank" rel="noopener" data-note-key="b" aria-keyshortcuts="b"><span class="u">b</span>oxx src</a>
+      <button type="button" class="btn btn--primary" data-close data-note-key="g" aria-keyshortcuts="g"><span class="u">g</span>ot it</button>
+    </p>
+    <p class="modal-keys"><span class="key">enter</span> got it <span class="sep" aria-hidden="true">·</span> <span class="key">esc</span> close</p>
   </div>
 </div>
 </body>

@@ -7,6 +7,9 @@ It also serves the installer at `get.boxxup.com`:
 curl https://get.boxxup.com | sh
 ```
 
+> **boxx is a personal project.** It works, and I run my own production sites on it, but it's
+> built for how I work, not as a supported product. It isn't meant for critical production apps.
+
 ## Develop
 
 ```sh

@@ -1,4 +1,4 @@
-// Progressive enhancement: the deploy intro, the theme modal, keys and copy.
+// Progressive enhancement: the deploy intro, the theme modal, keys, copy and the copy note.
 // Every page works without it.
 (() => {
   const root = document.documentElement;
@@ -169,7 +169,42 @@
     });
   }
 
-  /* ---------- copy ---------- */
+  /* ---------- copy, and the note that follows every copy of the install command ---------- */
+  const note = $("#copy-modal");
+  let noteReturn = null;
+  function openNote() {
+    if (!note || !note.hidden) return;
+    noteReturn = document.activeElement;
+    note.hidden = false;
+    $("[data-close]", note).focus();
+  }
+  function closeNote() {
+    note.hidden = true;
+    noteReturn?.focus?.();
+  }
+  if (note) {
+    $("[data-close]", note).addEventListener("click", closeNote);
+    note.addEventListener("click", (e) => { if (e.target === note) closeNote(); });
+    // While it's open it owns the keyboard: i installer src, b boxx src, g got it.
+    // Captured on the document so the keys work even after a click moves focus off the buttons.
+    document.addEventListener("keydown", (e) => {
+      if (note.hidden || e.metaKey || e.ctrlKey || e.altKey) return;
+      const stops = $$("a, button", note);
+      const hot = !e.shiftKey && $(`[data-note-key="${CSS.escape(e.key)}"]`, note);
+      if (e.key === "Escape" || e.key === "q") closeNote();
+      else if (hot) hot.click();
+      else if (e.key === "Tab") stops[(stops.indexOf(document.activeElement) + (e.shiftKey ? stops.length - 1 : 1)) % stops.length].focus();
+      else if (e.key === "Enter" && e.target.tagName !== "A") closeNote();
+      else return;
+      e.preventDefault();
+      e.stopPropagation();
+    }, true);
+    // Copying it by hand (mouse, ⌘C, the context menu) counts too, on any page.
+    document.addEventListener("copy", () => {
+      if (String(getSelection()).includes("get.boxxup.com")) setTimeout(openNote);
+    });
+  }
+
   const copyBtn = $("[data-copy]");
   async function copy() {
     const text = $("[data-copy-src]").textContent;
@@ -183,13 +218,14 @@
       document.execCommand("copy");
     }
     flash("✓ copied:", "install command", 3000);
+    openNote();
   }
   copyBtn?.addEventListener("click", copy);
 
   /* ---------- keys ---------- */
   addEventListener("keydown", (e) => {
     if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.altKey) return;
-    if (modal && !modal.hidden) return;
+    if ((modal && !modal.hidden) || (note && !note.hidden)) return;
     if (e.target.closest?.("input, textarea, select, [contenteditable]")) return;
     const k = e.key;
     const link = $(`.keybar a[data-key="${CSS.escape(k)}"]`);
