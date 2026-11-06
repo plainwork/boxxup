@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "build": "node src/build.mjs && tailwindcss -i src/site.css -o site/assets/css/site.css --minify",
-    "dev": "node src/dev.mjs"
+    "dev": "node src/dev.mjs",
+    "installer": "node src/installer.mjs"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.1.0",

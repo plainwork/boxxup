@@ -37,7 +37,7 @@ Same model as markgarrigan/dotcom: a tag is the release, and nothing runs on bra
 
 ## The installer at get.boxxup.com
 
-`curl https://get.boxxup.com | sh` installs boxx. `nginx.conf` has a second server block for `get.*` that answers `/` with `install.sh` as text/plain (no redirect, because `curl` without `-L` won't follow one). The Dockerfile `ADD`s `install.sh` from `plainwork/boxx` main at build time, so a change to the installer reaches get.boxxup.com with the next site release. `npm run dev` routes `get.localhost` the same way if `site/install.sh` exists (it's gitignored; copy `../boxx/install.sh` there to try it).
+`curl https://get.boxxup.com | sh` installs boxx. `nginx.conf` has a second server block for `get.*` that answers `/` with `install.sh` as text/plain (no redirect, because `curl` without `-L` won't follow one). `src/installer.mjs` writes `site/install.sh`: it reads `plainwork/boxx` main's current commit from git's smart-HTTP ref list (not the GitHub API, so CI never hits rate limits), fetches `install.sh` at that commit, and stamps two comment lines after the shebang: the commit and build date, and a link to the file at that commit. The Dockerfile runs it after `ADD`ing the ref list, which re-checks the list on every build, so a new boxx commit busts the cache. A change to the installer reaches get.boxxup.com with the next site release. `npm run installer` does the same locally, and `npm run dev` then routes `get.localhost` like nginx does (`site/install.sh` is gitignored).
 
 In boxx, the app needs `get.boxxup.com` as one of its hostnames.
 

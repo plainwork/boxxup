@@ -35,7 +35,7 @@ createServer((req, res) => {
   // get.* answers with the installer, like nginx.conf. Try: curl http://get.localhost:4321
   if (/^get\./.test(req.headers.host || "")) {
     const sh = path === "/" && file(join(SITE, "install.sh"));
-    if (!sh) { res.writeHead(404, { "content-type": "text/plain" }); return res.end(path === "/" ? "site/install.sh is missing: the Docker build adds it, or copy ../boxx/install.sh there\n" : "404\n"); }
+    if (!sh) { res.writeHead(404, { "content-type": "text/plain" }); return res.end(path === "/" ? "site/install.sh is missing: run npm run installer\n" : "404\n"); }
     res.writeHead(200, { "content-type": "text/plain; charset=utf-8", "cache-control": "no-cache" });
     return createReadStream(sh).pipe(res);
   }
