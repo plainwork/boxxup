@@ -1,0 +1,14 @@
+{
+  "name": "boxxup",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node src/build.mjs && tailwindcss -i src/site.css -o site/assets/css/site.css --minify",
+    "dev": "node src/dev.mjs"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.0",
+    "tailwindcss": "^4.1.0"
+  }
+}

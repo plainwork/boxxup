@@ -1,0 +1,4 @@
+node_modules/
+site/assets/css/
+.DS_Store
+site/install.sh

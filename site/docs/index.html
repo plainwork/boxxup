@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>docs · boxx</title>
+<meta name="description" content="Install boxx, deploy your first app, and manage hostnames, env and the host.">
+<meta property="og:title" content="docs · boxx">
+<meta property="og:description" content="Install boxx, deploy your first app, and manage hostnames, env and the host.">
+<meta property="og:type" content="website">
+<link rel="canonical" href="https://boxxup.com/docs/">
+<meta property="og:url" content="https://boxxup.com/docs/">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b0f19" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 9 9' shape-rendering='crispEdges'%3E%3Crect width='9' height='9' fill='%230b0f19'/%3E%3Cpath fill='%2393c5fd' d='M1 1h1v1h-1zM2 1h1v1h-1zM3 1h1v1h-1zM4 1h1v1h-1zM5 1h1v1h-1zM6 1h1v1h-1zM1 2h1v1h-1zM2 2h1v1h-1zM6 2h1v1h-1zM7 2h1v1h-1z'/%3E%3Cpath fill='%2360a5fa' d='M1 3h1v1h-1zM2 3h1v1h-1zM6 3h1v1h-1zM7 3h1v1h-1zM1 4h1v1h-1zM2 4h1v1h-1zM3 4h1v1h-1zM4 4h1v1h-1zM5 4h1v1h-1zM6 4h1v1h-1zM1 5h1v1h-1zM2 5h1v1h-1zM6 5h1v1h-1zM7 5h1v1h-1z'/%3E%3Cpath fill='%233b82f6' d='M1 6h1v1h-1zM2 6h1v1h-1zM6 6h1v1h-1zM7 6h1v1h-1zM1 7h1v1h-1zM2 7h1v1h-1zM3 7h1v1h-1zM4 7h1v1h-1zM5 7h1v1h-1zM6 7h1v1h-1z'/%3E%3C/svg%3E">
+<link rel="preload" href="/assets/fonts/jetbrainsmono-400.woff2" as="font" type="font/woff2" crossorigin>
+<script>try{var t=localStorage.getItem("boxx-theme");if(t&&t!=="auto")document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="stylesheet" href="/assets/css/site.css">
+<script src="/assets/js/main.js" defer></script>
+</head>
+<body data-page="/docs/">
+<a href="#main" class="skip">skip to content</a>
+<header class="titlebar">
+  <a href="/" class="titlebar-name">boxx</a> <span class="titlebar-version">[v0.3.2]</span>
+</header>
+<nav class="keybar" aria-label="Sections">
+  <a href="/features/" data-key="f" aria-keyshortcuts="f"><span class="key">f</span> features</a>
+  <span class="sep" aria-hidden="true">·</span>
+  <a href="/docs/" data-key="d" aria-current="page" aria-keyshortcuts="d"><span class="key">d</span> docs</a>
+  <span class="sep" aria-hidden="true">·</span>
+  <a href="https://github.com/plainwork/boxx" data-key="g" target="_blank" rel="noopener" aria-keyshortcuts="g"><span class="key">g</span> github</a>
+  <span class="sep" aria-hidden="true">·</span>
+  <button type="button" data-key="t" id="theme-btn" aria-haspopup="dialog" aria-controls="theme-modal" aria-keyshortcuts="t"><span class="key">t</span> theme</button>
+</nav>
+<main id="main">
+<h1 class="page-title">docs</h1>
+<div class="docs">
+  <nav class="toc" aria-label="On this page">
+    <h2 class="panel-title">contents</h2>
+    <ol>
+      <li><a href="#quick-start">quick start</a></li>
+      <li><a href="#contract">the contract</a></li>
+      <li><a href="#hostnames">hostnames</a></li>
+      <li><a href="#env">env</a></li>
+      <li><a href="#doctor">doctor and logs</a></li>
+    </ol>
+  </nav>
+  <div class="docs-body">
+    <section class="panel" id="quick-start">
+      <h2 class="panel-title"><span class="dot" aria-hidden="true"></span>quick start</h2>
+      <p>The installer puts boxx in /usr/local/bin. On Linux it also installs Docker if it's missing, enables it at boot and adds you to the docker group.</p>
+      <pre class="code"><span class="prompt">$</span> curl https://get.boxxup.com | sh
+<span class="prompt">$</span> boxx install &lt;image&gt; --host &lt;hostname&gt;  <span class="comment"># deploy your first app</span>
+<span class="prompt">$</span> boxx  <span class="comment"># open the TUI</span>
+<span class="prompt">$</span> boxx upgrade  <span class="comment"># upgrade boxx to the latest release</span></pre>
+    </section>
+    <section class="panel" id="contract">
+      <h2 class="panel-title"><span class="dot" aria-hidden="true"></span>the contract</h2>
+      <p>An image works with boxx if it is a Docker image (public or private registry), listens for HTTP on port 80 and exposes GET /up returning 2xx. Anything written under /storage persists. When a database is requested, the app reads its connection from DATABASE_URL.</p>
+    </section>
+    <section class="panel" id="hostnames">
+      <h2 class="panel-title"><span class="dot" aria-hidden="true"></span>hostnames</h2>
+      <p>Every app has one primary hostname and any number of extra ones. Point each hostname's DNS at the server first. A hostname can belong to only one app.</p>
+      <pre class="code"><span class="prompt">$</span> boxx host ls &lt;app&gt;
+<span class="prompt">$</span> boxx host add &lt;app&gt; www.example.com --redirect
+<span class="prompt">$</span> boxx host add &lt;app&gt; '*.example.com'  <span class="comment"># one label, cert on first visit</span>
+<span class="prompt">$</span> boxx host primary &lt;app&gt; www.example.com
+<span class="prompt">$</span> boxx host rm &lt;app&gt; app.example.net</pre>
+    </section>
+    <section class="panel" id="env">
+      <h2 class="panel-title"><span class="dot" aria-hidden="true"></span>env</h2>
+      <p>env push opens your $EDITOR on the app's variables, saves them and redeploys. boxx keeps the previous set, so you can roll back. DATABASE_URL is injected for you.</p>
+      <pre class="code"><span class="prompt">$</span> boxx env show &lt;app&gt;
+<span class="prompt">$</span> boxx env push &lt;app&gt; --file .env  <span class="comment"># review, save, redeploy</span>
+<span class="prompt">$</span> boxx env rollback &lt;app&gt;</pre>
+    </section>
+    <section class="panel" id="doctor">
+      <h2 class="panel-title"><span class="dot" aria-hidden="true"></span>doctor and logs</h2>
+      <p>boxx doctor checks the host: Docker, ports 80 and 443, your editor, the state directory and duplicate hostnames.</p>
+      <pre class="code"><span class="prompt">$</span> boxx doctor
+<span class="prompt">$</span> boxx logs &lt;app&gt;
+<span class="prompt">$</span> boxx ls</pre>
+    </section>
+  </div>
+</div>
+</main>
+<footer class="statusbar">
+  <span class="flash" data-flash role="status" aria-live="polite"></span>
+  <span class="hints"><span class="key">j/k</span> scroll <span class="sep" aria-hidden="true">·</span> <span class="key">t</span> theme</span>
+</footer>
+<div class="modal-wrap" id="theme-modal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="theme-title">
+    <h2 class="modal-title" id="theme-title">theme</h2>
+    <div class="modal-list" role="radiogroup" aria-labelledby="theme-title">
+      <button type="button" role="radio" aria-checked="false" data-theme-id="auto"><span class="dot" aria-hidden="true"></span><span class="name">auto</span><span class="note">dark or light, from your OS</span><span class="sw" aria-hidden="true"><i style="background:#0b0f19"></i><i style="background:#ffffff"></i></span></button>
+      <button type="button" role="radio" aria-checked="false" data-theme-id="dark"><span class="dot" aria-hidden="true"></span><span class="name">boxx dark</span><span class="note">the TUI on a dark terminal</span><span class="sw" aria-hidden="true"><i style="background:#0b0f19"></i><i style="background:#60a5fa"></i><i style="background:#1d4ed8"></i></span></button>
+      <button type="button" role="radio" aria-checked="false" data-theme-id="light"><span class="dot" aria-hidden="true"></span><span class="name">boxx light</span><span class="note">the TUI on a light terminal</span><span class="sw" aria-hidden="true"><i style="background:#ffffff"></i><i style="background:#1d4ed8"></i><i style="background:#6b7280"></i></span></button>
+      <button type="button" role="radio" aria-checked="false" data-theme-id="mocha"><span class="dot" aria-hidden="true"></span><span class="name">mocha</span><span class="note">Catppuccin Mocha</span><span class="sw" aria-hidden="true"><i style="background:#1e1e2e"></i><i style="background:#89b4fa"></i><i style="background:#cba6f7"></i></span></button>
+      <button type="button" role="radio" aria-checked="false" data-theme-id="phosphor"><span class="dot" aria-hidden="true"></span><span class="name">phosphor</span><span class="note">green CRT</span><span class="sw" aria-hidden="true"><i style="background:#050d07"></i><i style="background:#33ff66"></i><i style="background:#138a3a"></i></span></button>
+      <button type="button" role="radio" aria-checked="false" data-theme-id="amber"><span class="dot" aria-hidden="true"></span><span class="name">amber</span><span class="note">amber CRT</span><span class="sw" aria-hidden="true"><i style="background:#0d0800"></i><i style="background:#ffb000"></i><i style="background:#8a5c00"></i></span></button>
+      <button type="button" role="radio" aria-checked="false" data-theme-id="borland"><span class="dot" aria-hidden="true"></span><span class="name">borland</span><span class="note">blue screen, cyan bars</span><span class="sw" aria-hidden="true"><i style="background:#0000aa"></i><i style="background:#00aaaa"></i><i style="background:#ffff55"></i></span></button>
+    </div>
+    <p class="modal-keys"><span class="key">↑/k</span> up <span class="sep" aria-hidden="true">·</span> <span class="key">↓/j</span> down <span class="sep" aria-hidden="true">·</span> <span class="key">enter</span> pick <span class="sep" aria-hidden="true">·</span> <span class="key">esc</span> cancel</p>
+  </div>
+</div>
+</body>
+</html>

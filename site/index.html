@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>boxx: deploy Docker apps to one Linux host</title>
+<meta name="description" content="Install and run Docker apps on one Linux host, from a TUI.">
+<meta property="og:title" content="boxx: deploy Docker apps to one Linux host">
+<meta property="og:description" content="Install and run Docker apps on one Linux host, from a TUI.">
+<meta property="og:type" content="website">
+<link rel="canonical" href="https://boxxup.com/">
+<meta property="og:url" content="https://boxxup.com/">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b0f19" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 9 9' shape-rendering='crispEdges'%3E%3Crect width='9' height='9' fill='%230b0f19'/%3E%3Cpath fill='%2393c5fd' d='M1 1h1v1h-1zM2 1h1v1h-1zM3 1h1v1h-1zM4 1h1v1h-1zM5 1h1v1h-1zM6 1h1v1h-1zM1 2h1v1h-1zM2 2h1v1h-1zM6 2h1v1h-1zM7 2h1v1h-1z'/%3E%3Cpath fill='%2360a5fa' d='M1 3h1v1h-1zM2 3h1v1h-1zM6 3h1v1h-1zM7 3h1v1h-1zM1 4h1v1h-1zM2 4h1v1h-1zM3 4h1v1h-1zM4 4h1v1h-1zM5 4h1v1h-1zM6 4h1v1h-1zM1 5h1v1h-1zM2 5h1v1h-1zM6 5h1v1h-1zM7 5h1v1h-1z'/%3E%3Cpath fill='%233b82f6' d='M1 6h1v1h-1zM2 6h1v1h-1zM6 6h1v1h-1zM7 6h1v1h-1zM1 7h1v1h-1zM2 7h1v1h-1zM3 7h1v1h-1zM4 7h1v1h-1zM5 7h1v1h-1zM6 7h1v1h-1z'/%3E%3C/svg%3E">
+<link rel="preload" href="/assets/fonts/jetbrainsmono-400.woff2" as="font" type="font/woff2" crossorigin>
+<script>try{var t=localStorage.getItem("boxx-theme");if(t&&t!=="auto")document.documentElement.dataset.theme=t}catch(e){}</script>
+<script>(function(){try{var d=document.documentElement;if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;var n=performance.getEntriesByType("navigation")[0];var here=document.referrer&&new URL(document.referrer).origin===location.origin;if(here&&!(n&&n.type==="reload"))return;d.classList.add("intro");setTimeout(function(){d.classList.remove("intro")},9000)}catch(e){}})()</script>
+<link rel="stylesheet" href="/assets/css/site.css">
+<script src="/assets/js/main.js" defer></script>
+</head>
+<body data-page="/">
+<a href="#main" class="skip">skip to content</a>
+<header class="titlebar">
+  <a href="/" class="titlebar-name">boxx</a> <span class="titlebar-version">[v0.3.2]</span>
+</header>
+<nav class="keybar" aria-label="Sections">
+  <a href="/features/" data-key="f" aria-keyshortcuts="f"><span class="key">f</span> features</a>
+  <span class="sep" aria-hidden="true">·</span>
+  <a href="/docs/" data-key="d" aria-keyshortcuts="d"><span class="key">d</span> docs</a>
+  <span class="sep" aria-hidden="true">·</span>
+  <a href="https://github.com/plainwork/boxx" data-key="g" target="_blank" rel="noopener" aria-keyshortcuts="g"><span class="key">g</span> github</a>
+  <span class="sep" aria-hidden="true">·</span>
+  <button type="button" data-key="t" id="theme-btn" aria-haspopup="dialog" aria-controls="theme-modal" aria-keyshortcuts="t"><span class="key">t</span> theme</button>
+</nav>
+<main id="main">
+<section class="hero">
+  <h1 class="stage">
+    <svg class="logo" viewBox="0 0 32 8" role="img" aria-label="boxx" shape-rendering="crispEdges">
+    <path class="logo-sh" d="M1 1h1v1h-1zM2 1h1v1h-1zM3 1h1v1h-1zM4 1h1v1h-1zM5 1h1v1h-1zM6 1h1v1h-1zM1 2h1v1h-1zM2 2h1v1h-1zM6 2h1v1h-1zM7 2h1v1h-1zM1 3h1v1h-1zM2 3h1v1h-1zM6 3h1v1h-1zM7 3h1v1h-1zM1 4h1v1h-1zM2 4h1v1h-1zM3 4h1v1h-1zM4 4h1v1h-1zM5 4h1v1h-1zM6 4h1v1h-1zM1 5h1v1h-1zM2 5h1v1h-1zM6 5h1v1h-1zM7 5h1v1h-1zM1 6h1v1h-1zM2 6h1v1h-1zM6 6h1v1h-1zM7 6h1v1h-1zM1 7h1v1h-1zM2 7h1v1h-1zM3 7h1v1h-1zM4 7h1v1h-1zM5 7h1v1h-1zM6 7h1v1h-1zM10 1h1v1h-1zM11 1h1v1h-1zM12 1h1v1h-1zM13 1h1v1h-1zM14 1h1v1h-1zM9 2h1v1h-1zM10 2h1v1h-1zM14 2h1v1h-1zM15 2h1v1h-1zM9 3h1v1h-1zM10 3h1v1h-1zM14 3h1v1h-1zM15 3h1v1h-1zM9 4h1v1h-1zM10 4h1v1h-1zM14 4h1v1h-1zM15 4h1v1h-1zM9 5h1v1h-1zM10 5h1v1h-1zM14 5h1v1h-1zM15 5h1v1h-1zM9 6h1v1h-1zM10 6h1v1h-1zM14 6h1v1h-1zM15 6h1v1h-1zM10 7h1v1h-1zM11 7h1v1h-1zM12 7h1v1h-1zM13 7h1v1h-1zM14 7h1v1h-1zM17 1h1v1h-1zM18 1h1v1h-1zM22 1h1v1h-1zM23 1h1v1h-1zM17 2h1v1h-1zM18 2h1v1h-1zM22 2h1v1h-1zM23 2h1v1h-1zM18 3h1v1h-1zM19 3h1v1h-1zM21 3h1v1h-1zM22 3h1v1h-1zM19 4h1v1h-1zM20 4h1v1h-1zM21 4h1v1h-1zM18 5h1v1h-1zM19 5h1v1h-1zM21 5h1v1h-1zM22 5h1v1h-1zM17 6h1v1h-1zM18 6h1v1h-1zM22 6h1v1h-1zM23 6h1v1h-1zM17 7h1v1h-1zM18 7h1v1h-1zM22 7h1v1h-1zM23 7h1v1h-1zM25 1h1v1h-1zM26 1h1v1h-1zM30 1h1v1h-1zM31 1h1v1h-1zM25 2h1v1h-1zM26 2h1v1h-1zM30 2h1v1h-1zM31 2h1v1h-1zM26 3h1v1h-1zM27 3h1v1h-1zM29 3h1v1h-1zM30 3h1v1h-1zM27 4h1v1h-1zM28 4h1v1h-1zM29 4h1v1h-1zM26 5h1v1h-1zM27 5h1v1h-1zM29 5h1v1h-1zM30 5h1v1h-1zM25 6h1v1h-1zM26 6h1v1h-1zM30 6h1v1h-1zM31 6h1v1h-1zM25 7h1v1h-1zM26 7h1v1h-1zM30 7h1v1h-1zM31 7h1v1h-1z"/>
+    <path class="logo-1" d="M0 0h1v1h-1zM1 0h1v1h-1zM2 0h1v1h-1zM3 0h1v1h-1zM4 0h1v1h-1zM5 0h1v1h-1zM0 1h1v1h-1zM1 1h1v1h-1zM5 1h1v1h-1zM6 1h1v1h-1zM9 0h1v1h-1zM10 0h1v1h-1zM11 0h1v1h-1zM12 0h1v1h-1zM13 0h1v1h-1zM8 1h1v1h-1zM9 1h1v1h-1zM13 1h1v1h-1zM14 1h1v1h-1zM16 0h1v1h-1zM17 0h1v1h-1zM21 0h1v1h-1zM22 0h1v1h-1zM16 1h1v1h-1zM17 1h1v1h-1zM21 1h1v1h-1zM22 1h1v1h-1zM24 0h1v1h-1zM25 0h1v1h-1zM29 0h1v1h-1zM30 0h1v1h-1zM24 1h1v1h-1zM25 1h1v1h-1zM29 1h1v1h-1zM30 1h1v1h-1z"/>
+    <path class="logo-2" d="M0 2h1v1h-1zM1 2h1v1h-1zM5 2h1v1h-1zM6 2h1v1h-1zM0 3h1v1h-1zM1 3h1v1h-1zM2 3h1v1h-1zM3 3h1v1h-1zM4 3h1v1h-1zM5 3h1v1h-1zM0 4h1v1h-1zM1 4h1v1h-1zM5 4h1v1h-1zM6 4h1v1h-1zM8 2h1v1h-1zM9 2h1v1h-1zM13 2h1v1h-1zM14 2h1v1h-1zM8 3h1v1h-1zM9 3h1v1h-1zM13 3h1v1h-1zM14 3h1v1h-1zM8 4h1v1h-1zM9 4h1v1h-1zM13 4h1v1h-1zM14 4h1v1h-1zM17 2h1v1h-1zM18 2h1v1h-1zM20 2h1v1h-1zM21 2h1v1h-1zM18 3h1v1h-1zM19 3h1v1h-1zM20 3h1v1h-1zM17 4h1v1h-1zM18 4h1v1h-1zM20 4h1v1h-1zM21 4h1v1h-1zM25 2h1v1h-1zM26 2h1v1h-1zM28 2h1v1h-1zM29 2h1v1h-1zM26 3h1v1h-1zM27 3h1v1h-1zM28 3h1v1h-1zM25 4h1v1h-1zM26 4h1v1h-1zM28 4h1v1h-1zM29 4h1v1h-1z"/>
+    <path class="logo-3" d="M0 5h1v1h-1zM1 5h1v1h-1zM5 5h1v1h-1zM6 5h1v1h-1zM0 6h1v1h-1zM1 6h1v1h-1zM2 6h1v1h-1zM3 6h1v1h-1zM4 6h1v1h-1zM5 6h1v1h-1zM8 5h1v1h-1zM9 5h1v1h-1zM13 5h1v1h-1zM14 5h1v1h-1zM9 6h1v1h-1zM10 6h1v1h-1zM11 6h1v1h-1zM12 6h1v1h-1zM13 6h1v1h-1zM16 5h1v1h-1zM17 5h1v1h-1zM21 5h1v1h-1zM22 5h1v1h-1zM16 6h1v1h-1zM17 6h1v1h-1zM21 6h1v1h-1zM22 6h1v1h-1zM24 5h1v1h-1zM25 5h1v1h-1zM29 5h1v1h-1zM30 5h1v1h-1zM24 6h1v1h-1zM25 6h1v1h-1zM29 6h1v1h-1zM30 6h1v1h-1z"/>
+  </svg>
+    <span class="loader" aria-hidden="true" data-steps="[&quot;ensuring boxx-proxy is running&quot;,&quot;docker pull ghcr.io/plainwork/boxxup:latest&quot;,&quot;starting boxx&quot;,&quot;waiting for /up to return 2xx&quot;,&quot;switching proxy to boxx&quot;]">
+      <span class="loader-label">deploying boxx…</span>
+      <canvas class="scanner"></canvas>
+      <span class="loader-step">ensuring boxx-proxy is running</span>
+    </span>
+  </h1>
+  <p class="pitch reveal">Install and run Docker apps on one Linux host, from a TUI.</p>
+  <div class="term reveal" id="install">
+    <h2 class="term-title">install</h2>
+    <div class="term-body">
+      <code class="term-cmd"><span class="prompt" aria-hidden="true">$ </span><span data-copy-src>curl https://get.boxxup.com | sh</span></code>
+      <button type="button" class="copy" data-copy aria-keyshortcuts="c"><span class="key">c</span> copy</button>
+    </div>
+  </div>
+  <p class="then reveal"><span class="muted">then</span> <code>boxx install &lt;image&gt; --host &lt;hostname&gt;</code></p>
+</section>
+</main>
+<footer class="statusbar">
+  <span class="flash" data-flash role="status" aria-live="polite"></span>
+  <span class="hints"><span class="key">c</span> copy install <span class="sep" aria-hidden="true">·</span> <span class="key">t</span> theme</span>
+</footer>
+<div class="modal-wrap" id="theme-modal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="theme-title">
+    <h2 class="modal-title" id="theme-title">theme</h2>
+    <div class="modal-list" role="radiogroup" aria-labelledby="theme-title">
+      <button type="button" role="radio" aria-checked="false" data-theme-id="auto"><span class="dot" aria-hidden="true"></span><span class="name">auto</span><span class="note">dark or light, from your OS</span><span class="sw" aria-hidden="true"><i style="background:#0b0f19"></i><i style="background:#ffffff"></i></span></button>
+      <button type="button" role="radio" aria-checked="false" data-theme-id="dark"><span class="dot" aria-hidden="true"></span><span class="name">boxx dark</span><span class="note">the TUI on a dark terminal</span><span class="sw" aria-hidden="true"><i style="background:#0b0f19"></i><i style="background:#60a5fa"></i><i style="background:#1d4ed8"></i></span></button>
+      <button type="button" role="radio" aria-checked="false" data-theme-id="light"><span class="dot" aria-hidden="true"></span><span class="name">boxx light</span><span class="note">the TUI on a light terminal</span><span class="sw" aria-hidden="true"><i style="background:#ffffff"></i><i style="background:#1d4ed8"></i><i style="background:#6b7280"></i></span></button>
+      <button type="button" role="radio" aria-checked="false" data-theme-id="mocha"><span class="dot" aria-hidden="true"></span><span class="name">mocha</span><span class="note">Catppuccin Mocha</span><span class="sw" aria-hidden="true"><i style="background:#1e1e2e"></i><i style="background:#89b4fa"></i><i style="background:#cba6f7"></i></span></button>
+      <button type="button" role="radio" aria-checked="false" data-theme-id="phosphor"><span class="dot" aria-hidden="true"></span><span class="name">phosphor</span><span class="note">green CRT</span><span class="sw" aria-hidden="true"><i style="background:#050d07"></i><i style="background:#33ff66"></i><i style="background:#138a3a"></i></span></button>
+      <button type="button" role="radio" aria-checked="false" data-theme-id="amber"><span class="dot" aria-hidden="true"></span><span class="name">amber</span><span class="note">amber CRT</span><span class="sw" aria-hidden="true"><i style="background:#0d0800"></i><i style="background:#ffb000"></i><i style="background:#8a5c00"></i></span></button>
+      <button type="button" role="radio" aria-checked="false" data-theme-id="borland"><span class="dot" aria-hidden="true"></span><span class="name">borland</span><span class="note">blue screen, cyan bars</span><span class="sw" aria-hidden="true"><i style="background:#0000aa"></i><i style="background:#00aaaa"></i><i style="background:#ffff55"></i></span></button>
+    </div>
+    <p class="modal-keys"><span class="key">↑/k</span> up <span class="sep" aria-hidden="true">·</span> <span class="key">↓/j</span> down <span class="sep" aria-hidden="true">·</span> <span class="key">enter</span> pick <span class="sep" aria-hidden="true">·</span> <span class="key">esc</span> cancel</p>
+  </div>
+</div>
+</body>
+</html>
