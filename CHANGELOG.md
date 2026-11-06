@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.2 (2026-11-06)
+
+### Features
+
+* stamp the installer at get.boxxup.com with the boxx commit it came from, linking to the file at that commit
+
 ## 0.1.1 (2026-11-06)
 
 ### Features
