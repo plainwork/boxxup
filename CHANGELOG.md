@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.1 (2026-11-06)
+
+### Features
+
+* say boxx is a personal project: a muted note in the status bar, and a "before you run it" popup whenever the install command is copied, with links to the installer and the boxx source
+
 ## 0.1.0 (2026-11-06)
 
 ### Features
