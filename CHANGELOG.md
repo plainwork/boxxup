@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.4 (2026-11-07)
+
+### Features
+
+* document groups on the docs page: path routing, the stripped prefix and BASE_PATH, the shared database, slugs, and adding apps to an installed group with boxx group add
+* show boxx v0.4.0 in the title bar
+
 ## 0.1.3 (2026-11-07)
 
 ### Changes
