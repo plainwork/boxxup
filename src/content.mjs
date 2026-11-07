@@ -5,7 +5,7 @@ export const site = {
   name: "boxx",
   url: "https://boxxup.com",
   // The latest boxx release, shown in the title bar like the TUI does. Bump it when boxx ships.
-  boxxVersion: "v0.3.2",
+  boxxVersion: "v0.3.3",
   pitch: "Install and run Docker apps on one Linux host, from a TUI.",
   repo: "https://github.com/plainwork/boxx",
   install: "curl https://get.boxxup.com | sh",
