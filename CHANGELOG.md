@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.3 (2026-11-07)
+
+### Changes
+
+* show boxx v0.3.3 in the title bar
+
 ## 0.1.2 (2026-11-06)
 
 ### Features
