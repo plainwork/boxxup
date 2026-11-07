@@ -5,7 +5,7 @@ export const site = {
   name: "boxx",
   url: "https://boxxup.com",
   // The latest boxx release, shown in the title bar like the TUI does. Bump it when boxx ships.
-  boxxVersion: "v0.3.3",
+  boxxVersion: "v0.4.0",
   pitch: "Install and run Docker apps on one Linux host, from a TUI.",
   repo: "https://github.com/plainwork/boxx",
   install: "curl https://get.boxxup.com | sh",
@@ -57,7 +57,8 @@ export const features = [
   {
     id: "groups",
     name: "groups",
-    body: "Put several apps behind one hostname, routed by path, with one shared database for the group.",
+    body: "Put several apps behind one hostname, routed by path, with one shared database for the group. Add more apps to the group later without touching the ones already running.",
+    code: "boxx group add <group> --app <image>=/docs",
   },
   {
     id: "updates",
@@ -99,6 +100,22 @@ export const docs = [
       ["$", "boxx host add <app> '*.example.com'", "one label, cert on first visit"],
       ["$", "boxx host primary <app> www.example.com"],
       ["$", "boxx host rm <app> app.example.net"],
+    ],
+  },
+  {
+    id: "groups",
+    name: "groups: routing by path",
+    nav: "groups", // the contents list; name is the section heading
+    body: "A group puts several apps behind one hostname, each answering its own path prefix: the site at / and a separate admin app at /admin, say. The longest prefix wins, so /admin is matched before /. boxx strips the prefix before proxying, so the admin app sees / and serves its own GET /up, and sets BASE_PATH=/admin so it can build its links. With --db the group gets one database and every app reads the same DATABASE_URL, including apps added later. Each app keeps its own /storage volume. group add puts more apps in an installed group; it refuses a path or slug the group already has and leaves the running apps alone. The group's slug comes from its hostname (example.com becomes example-com), an app's from its path, or from its image for /. Hostname commands take the group slug; deploy, logs and remove take group/app.",
+    code: [
+      ["$", "boxx install-group --host example.com --db postgres \\"],
+      [" ", "  --app ghcr.io/acme/site:latest=/ \\"],
+      [" ", "  --app ghcr.io/acme/admin:latest=/admin"],
+      ["$", "boxx group add example-com --app ghcr.io/acme/docs:latest=/docs"],
+      ["$", "boxx deploy example-com/admin --image ghcr.io/acme/admin:v2"],
+      ["$", "boxx env push example-com --app admin"],
+      ["$", "boxx remove example-com/admin", "one app; the shared database stays"],
+      ["$", "boxx remove example-com", "every app, the database and volumes"],
     ],
   },
   {

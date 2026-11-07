@@ -21,7 +21,7 @@
 <body data-page="/docs/">
 <a href="#main" class="skip">skip to content</a>
 <header class="titlebar">
-  <a href="/" class="titlebar-name">boxx</a> <span class="titlebar-version">[v0.3.3]</span>
+  <a href="/" class="titlebar-name">boxx</a> <span class="titlebar-version">[v0.4.0]</span>
 </header>
 <nav class="keybar" aria-label="Sections">
   <a href="/features/" data-key="f" aria-keyshortcuts="f"><span class="key">f</span> features</a>
@@ -41,6 +41,7 @@
       <li><a href="#quick-start">quick start</a></li>
       <li><a href="#contract">the contract</a></li>
       <li><a href="#hostnames">hostnames</a></li>
+      <li><a href="#groups">groups</a></li>
       <li><a href="#env">env</a></li>
       <li><a href="#doctor">doctor and logs</a></li>
     </ol>
@@ -66,6 +67,18 @@
 <span class="prompt">$</span> boxx host add &lt;app&gt; '*.example.com'  <span class="comment"># one label, cert on first visit</span>
 <span class="prompt">$</span> boxx host primary &lt;app&gt; www.example.com
 <span class="prompt">$</span> boxx host rm &lt;app&gt; app.example.net</pre>
+    </section>
+    <section class="panel" id="groups">
+      <h2 class="panel-title"><span class="dot" aria-hidden="true"></span>groups: routing by path</h2>
+      <p>A group puts several apps behind one hostname, each answering its own path prefix: the site at / and a separate admin app at /admin, say. The longest prefix wins, so /admin is matched before /. boxx strips the prefix before proxying, so the admin app sees / and serves its own GET /up, and sets BASE_PATH=/admin so it can build its links. With --db the group gets one database and every app reads the same DATABASE_URL, including apps added later. Each app keeps its own /storage volume. group add puts more apps in an installed group; it refuses a path or slug the group already has and leaves the running apps alone. The group's slug comes from its hostname (example.com becomes example-com), an app's from its path, or from its image for /. Hostname commands take the group slug; deploy, logs and remove take group/app.</p>
+      <pre class="code"><span class="prompt">$</span> boxx install-group --host example.com --db postgres \
+<span class="prompt"> </span>   --app ghcr.io/acme/site:latest=/ \
+<span class="prompt"> </span>   --app ghcr.io/acme/admin:latest=/admin
+<span class="prompt">$</span> boxx group add example-com --app ghcr.io/acme/docs:latest=/docs
+<span class="prompt">$</span> boxx deploy example-com/admin --image ghcr.io/acme/admin:v2
+<span class="prompt">$</span> boxx env push example-com --app admin
+<span class="prompt">$</span> boxx remove example-com/admin  <span class="comment"># one app; the shared database stays</span>
+<span class="prompt">$</span> boxx remove example-com  <span class="comment"># every app, the database and volumes</span></pre>
     </section>
     <section class="panel" id="env">
       <h2 class="panel-title"><span class="dot" aria-hidden="true"></span>env</h2>

@@ -21,7 +21,7 @@
 <body data-page="/features/">
 <a href="#main" class="skip">skip to content</a>
 <header class="titlebar">
-  <a href="/" class="titlebar-name">boxx</a> <span class="titlebar-version">[v0.3.3]</span>
+  <a href="/" class="titlebar-name">boxx</a> <span class="titlebar-version">[v0.4.0]</span>
 </header>
 <nav class="keybar" aria-label="Sections">
   <a href="/features/" data-key="f" aria-current="page" aria-keyshortcuts="f"><span class="key">f</span> features</a>
@@ -58,7 +58,8 @@
   </section>
   <section class="panel" id="groups">
     <h2 class="panel-title"><span class="dot" aria-hidden="true"></span>groups</h2>
-    <p>Put several apps behind one hostname, routed by path, with one shared database for the group.</p>
+    <p>Put several apps behind one hostname, routed by path, with one shared database for the group. Add more apps to the group later without touching the ones already running.</p>
+    <pre class="code"><span class="prompt">$</span> boxx group add &lt;group&gt; --app &lt;image&gt;=/docs</pre>
   </section>
   <section class="panel" id="updates">
     <h2 class="panel-title"><span class="dot" aria-hidden="true"></span>updates on your terms</h2>

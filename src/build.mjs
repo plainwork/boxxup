@@ -208,7 +208,7 @@ const docsPage = () => shell({
   <nav class="toc" aria-label="On this page">
     <h2 class="panel-title">contents</h2>
     <ol>
-${docs.map((d) => `      <li><a href="#${d.id}">${esc(d.name)}</a></li>`).join("\n")}
+${docs.map((d) => `      <li><a href="#${d.id}">${esc(d.nav ?? d.name)}</a></li>`).join("\n")}
     </ol>
   </nav>
   <div class="docs-body">
