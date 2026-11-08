@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.5 (2026-11-07)
+
+### Changes
+
+* nav and shortcuts underline the key's first letter (**f**eatures, **c**opy) instead of showing it separately, so the nav fits on one line on phones
+* styles are mobile first, with breakpoints at 768px and 1024px
+* phones: the status bar scrolls in at the end of the page instead of sticking to the bottom, and the docs contents box is dropped (it stays as the sticky sidebar from 1024px)
+* phones: the install command and the next step shrink just enough to stay on one line, with "then" above the next step
+
 ## 0.1.4 (2026-11-07)
 
 ### Features
