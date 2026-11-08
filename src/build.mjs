@@ -71,7 +71,11 @@ const NAV = [
   ["g", "github", site.repo],
 ];
 
-const key = (k, label) => `<span class="key">${esc(k)}</span> ${esc(label)}`;
+// A shortcut that is its label's first letter is that letter, underlined ("copy" with c).
+// Any other key (j/k, enter, esc) is shown before its label, as in the TUI.
+const key = (k, label) => label.startsWith(k) && k.length === 1
+  ? `<span class="key key--first">${esc(k)}</span>${esc(label.slice(1))}`
+  : `<span class="key">${esc(k)}</span> ${esc(label)}`;
 const sep = `<span class="sep" aria-hidden="true">·</span>`;
 
 // Plays the deploy intro on a fresh visit or a reload, not when arriving from another page here.
@@ -176,11 +180,11 @@ const home = () => shell({
   <div class="term reveal" id="install">
     <h2 class="term-title">install</h2>
     <div class="term-body">
-      <code class="term-cmd"><span class="prompt" aria-hidden="true">$ </span><span data-copy-src>${esc(site.install)}</span></code>
+      <code class="term-cmd fit" style="--cols: ${site.install.length + 2}"><span class="prompt" aria-hidden="true">$ </span><span data-copy-src>${esc(site.install)}</span></code>
       <button type="button" class="copy" data-copy aria-keyshortcuts="c">${key("c", "copy")}</button>
     </div>
   </div>
-  <p class="then reveal"><span class="muted">then</span> <code>${esc(site.next)}</code></p>
+  <p class="then reveal"><span class="muted">then</span> <code class="fit" style="--cols: ${site.next.length}">${esc(site.next)}</code></p>
 </section>`,
 });
 

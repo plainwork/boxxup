@@ -75,6 +75,9 @@
   color-scheme: dark;
 }
 
+/* Mobile first: the base rules are for phones, then two breakpoints add to them.
+   md ≥ 768px: tablets and up. lg ≥ 1024px: room for the docs sidebar. */
+
 @layer base {
   html {
     background: var(--bg); color: var(--fg);
@@ -107,6 +110,7 @@
   .skip:focus { left: 1ch; }
   .muted { color: var(--muted); }
   .key { color: var(--accent); font-weight: 700; }
+  .key--first { text-decoration: underline; text-underline-offset: 0.2em; }
   .bad { color: var(--bad); font-weight: 700; }
   .term a, .panel a { text-decoration: underline; }
   .term a:hover, .panel a:hover { color: var(--accent); }
@@ -127,10 +131,14 @@
 
   /* ---------- key bar nav (the TUI's bottom hints, as links) ---------- */
   .keybar {
-    display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 0.2rem 1.5ch;
+    display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 0.2rem 0.5ch;
     padding: 0 2ch 0.4rem; color: var(--muted);
   }
-  @media (max-width: 639px) { .keybar { gap: 0.2rem 0.5ch; } .keybar .sep { display: none; } }
+  .keybar .sep { display: none; }
+  @media (min-width: 768px) {
+    .keybar { gap: 0.2rem 1.5ch; }
+    .keybar .sep { display: inline; }
+  }
   .keybar a, .keybar button {
     padding: 0 1ch; text-decoration: none; color: var(--muted);
     font: inherit; background: none; border: 0; cursor: pointer; text-shadow: inherit;
@@ -143,29 +151,31 @@
   .keybar [aria-current] .key, .keybar [aria-expanded="true"] .key { color: var(--sel-fg); }
 
   main { flex: 1; width: 100%; max-width: 72rem; margin: 0 auto; padding: 2rem 16px 3rem; }
-  @media (min-width: 640px) { main { padding-inline: 3ch; } }
+  @media (min-width: 768px) { main { padding-inline: 3ch; } }
 
-  /* ---------- status bar ---------- */
+  /* ---------- status bar ----------
+     Phones: the last thing on the page, scrolled to like the rest (a sticky bar
+     floats above Safari's toolbar). md and up: pinned to the bottom, like the TUI. */
   .statusbar {
-    position: sticky; bottom: 0; z-index: 20;
-    display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.2rem 3ch;
+    display: flex; flex-wrap: wrap; justify-content: flex-start; align-items: baseline; gap: 0.2rem 3ch;
     padding: 0.25rem 2ch; background: var(--bar-bg); color: var(--bar-fg);
   }
-  .statusbar { justify-content: flex-start; align-items: baseline; }
   .statusbar .note, .statusbar .hints { color: var(--muted); }
-  .statusbar .hints { margin-left: auto; }
+  .statusbar .note { font-size: 0.8125rem; }
+  /* phones: a flash takes the note's place while it shows; key hints need a keyboard */
+  .statusbar:has(.flash:not(:empty)) .note { display: none; }
+  .statusbar .hints { display: none; margin-left: auto; }
+  @media (min-width: 768px) {
+    .statusbar { position: sticky; bottom: 0; z-index: 20; }
+    .statusbar .note { font-size: inherit; }
+    .statusbar:has(.flash:not(:empty)) .note, .statusbar .hints { display: inline; }
+  }
   :root[data-theme="borland"] .statusbar .note { color: #000; }
   :root[data-theme="borland"] .statusbar .hints, :root[data-theme="borland"] .statusbar .key { color: #000; }
   :root[data-theme="borland"] .statusbar .key { color: #aa0000; }
   :root[data-theme="borland"] .statusbar .sep, :root[data-theme="borland"] .flash .ok { color: #000; }
   .flash:empty { display: none; }
-  /* phones: a flash takes the note's place while it shows */
-  @media (max-width: 639px) {
-    .statusbar .note { font-size: 0.8125rem; }
-    .statusbar:has(.flash:not(:empty)) .note { display: none; }
-  }
   .ok, .flash .ok { color: var(--ok); font-weight: 700; }
-  @media (max-width: 639px) { .statusbar .hints { display: none; } }
 
   /* ---------- hero ---------- */
   .hero {
@@ -209,6 +219,15 @@
   .copy:hover, .copy:focus-visible { background: var(--sel-bg); color: var(--sel-fg); outline: none; }
   .copy:hover .key, .copy:focus-visible .key { color: var(--sel-fg); }
   .then code { color: var(--fg); }
+  /* Phones: a command shrinks just enough to stay on one line. --cols is its length,
+     set by build.mjs; --gutter is the room around it (main's padding, plus the
+     terminal's border and padding). A glyph is 0.6em wide; 0.61 leaves a margin. */
+  .fit { font-size: min(1em, calc((100vw - var(--gutter, 32px)) / (var(--cols) * 0.61))); }
+  .term-cmd.fit { --gutter: calc(32px + 2px + 4ch); }
+  .then code { display: block; }
+  @media (min-width: 768px) {
+    .then code { display: inline; }
+  }
 
   /* ---------- intro ----------
      html.intro: the loader runs and the logo waits behind it.
@@ -241,17 +260,18 @@
     white-space: pre-wrap; overflow-wrap: anywhere;
   }
 
+  /* The contents box only earns its place as a sticky sidebar, so phones and tablets skip it. */
   .docs { display: grid; gap: 2rem 3ch; }
   .docs-body { display: grid; gap: 2rem; min-width: 0; }
-  .toc { position: relative; border: 1px solid var(--border); border-radius: 0.5rem; background: var(--panel); padding: 1.3rem 1ch 0.8rem; }
+  .toc { display: none; position: relative; border: 1px solid var(--border); border-radius: 0.5rem; background: var(--panel); padding: 1.3rem 1ch 0.8rem; }
   .toc ol { list-style: none; margin: 0; padding: 0; }
   .toc a { display: block; padding: 0 1ch; text-decoration: none; color: var(--muted); }
   .toc a::before { content: "  "; white-space: pre; }
   .toc a:hover, .toc a:focus-visible, .toc a[aria-current] { background: var(--sel-bg); color: var(--sel-fg); outline: none; }
   .toc a[aria-current]::before { content: "› "; }
-  @media (min-width: 900px) {
+  @media (min-width: 1024px) {
     .docs { grid-template-columns: 24ch minmax(0, 1fr); align-items: start; }
-    .toc { position: sticky; top: 1.5rem; }
+    .toc { display: block; position: sticky; top: 1.5rem; }
   }
 
   /* ---------- theme modal ---------- */
@@ -272,11 +292,15 @@
   }
   .modal-list { display: grid; }
   .modal-list button {
-    display: grid; grid-template-columns: 2ch 12ch minmax(0, 1fr) auto; gap: 1ch; align-items: center;
+    display: grid; grid-template-columns: 2ch minmax(0, 1fr) auto; gap: 1ch; align-items: center;
     width: 100%; padding: 0.1rem 1ch; text-align: left;
     font: inherit; color: var(--fg); background: none; border: 0; cursor: pointer; text-shadow: inherit;
   }
-  .modal-list .note { color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .modal-list .note { display: none; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  @media (min-width: 768px) {
+    .modal-list button { grid-template-columns: 2ch 12ch minmax(0, 1fr) auto; }
+    .modal-list .note { display: block; }
+  }
   .modal-list .dot::before { content: "○"; color: var(--accent); }
   .modal-list [aria-checked="true"] .dot::before { content: "●"; }
   .modal-list button[data-cur], .modal-list button:focus-visible { background: var(--sel-bg); color: var(--sel-fg); font-weight: 700; outline: none; }
@@ -288,12 +312,14 @@
 
   /* the copy modal: the full personal-project note */
   .modal--note { width: min(100%, 60ch); padding-inline: 2ch; }
-  @media (max-width: 560px) {
-    .modal-actions { flex-direction: column; align-items: stretch; gap: 0.5rem; }
-    .modal-actions .btn { text-align: center; padding-block: 0.15rem; }
-  }
   .modal-body { display: grid; gap: 0.8rem; }
-  .modal-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 1ch 2ch; margin-top: 1.2rem; }
+  /* phones: the buttons stack full width; md and up: a row on the right */
+  .modal-actions { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1.2rem; }
+  .modal-actions .btn { text-align: center; padding-block: 0.15rem; }
+  @media (min-width: 768px) {
+    .modal-actions { flex-direction: row; flex-wrap: wrap; justify-content: flex-end; gap: 1ch 2ch; }
+    .modal-actions .btn { padding-block: 0; }
+  }
   .modal--note .modal-keys { margin-inline: 0; }
 
   /* buttons, the TUI's btnStyle: bracketed, inverse when focused */
@@ -309,10 +335,6 @@
   .btn:hover, .btn:focus-visible { background: var(--sel-bg); color: var(--sel-fg); outline: none; }
   .btn:hover::before, .btn:hover::after, .btn:focus-visible::before, .btn:focus-visible::after { color: var(--sel-fg); }
   .btn--primary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-  @media (max-width: 520px) {
-    .modal-list button { grid-template-columns: 2ch minmax(0, 1fr) auto; }
-    .modal-list .note { display: none; }
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
