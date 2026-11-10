@@ -1,5 +1,5 @@
 // Renders the static pages into site/ from src/content.mjs.
-// Run with `npm run build` (this, then Tailwind).
+// Run with `bun run build` (this, then Tailwind).
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";

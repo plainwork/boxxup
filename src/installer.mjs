@@ -1,7 +1,7 @@
 // Writes site/install.sh for get.boxxup.com: boxx's installer at main's current
 // commit, stamped with that commit so anyone reading it can find its source.
 //
-//   node src/installer.mjs [refs-file]   (npm run installer)
+//   bun src/installer.mjs [refs-file]   (bun run installer)
 //
 // The Dockerfile passes a refs file it ADDs, so its cache breaks whenever boxx changes.
 // Without one, the refs are fetched here. Uses git's smart-HTTP ref list, not the

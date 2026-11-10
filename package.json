@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "node src/build.mjs && tailwindcss -i src/site.css -o site/assets/css/site.css --minify",
-    "dev": "node src/dev.mjs",
-    "installer": "node src/installer.mjs"
+    "build": "bun src/build.mjs && bun --bun tailwindcss -i src/site.css -o site/assets/css/site.css --minify",
+    "dev": "bun src/dev.mjs",
+    "installer": "bun src/installer.mjs"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.1.0",

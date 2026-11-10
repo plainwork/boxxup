@@ -8,9 +8,9 @@ The boxx website, https://boxxup.com (repo `plainwork/boxxup`). It looks like th
 
 ## Commands
 
-- `npm install`: install Tailwind 4 (the only dependency)
-- `npm run build`: render the pages (`node src/build.mjs`), then compile `src/site.css` to `site/assets/css/site.css`
-- `npm run dev`: one terminal for local work (`src/dev.mjs`). It re-renders the pages when `src/` changes, recompiles the CSS, and serves `site/` at http://localhost:4321 (`PORT` overrides it). Reload the browser to see changes; Ctrl-C stops everything.
+- `bun install`: install Tailwind 4 (the only dependency). The site runs on Bun, not Node: there is no `package-lock.json`, only `bun.lock`.
+- `bun run build`: render the pages (`bun src/build.mjs`), then compile `src/site.css` to `site/assets/css/site.css`. Tailwind runs as `bun --bun tailwindcss`: its CLI has a `#!/usr/bin/env node` shebang, and `--bun` runs it on Bun (the Docker image has no Node).
+- `bun run dev`: one terminal for local work (`src/dev.mjs`). It re-renders the pages when `src/` changes, recompiles the CSS, and serves `site/` at http://localhost:4321 (`PORT` overrides it). Reload the browser to see changes; Ctrl-C stops everything.
 - Docker: `docker build -t boxxup .` serves the site on port 80, and `GET /up` returns 200 for boxx.
 
 There is no test suite or linter.
@@ -19,7 +19,7 @@ There is no test suite or linter.
 
 Same model as markgarrigan/dotcom: a tag is the release, and nothing runs on branch pushes.
 
-- To release: `npm version X.Y.Z --no-git-tag-version` (bumps `package.json` and `package-lock.json`), add an entry at the top of `CHANGELOG.md`, commit `chore: release X.Y.Z`, then `git tag vX.Y.Z && git push origin main vX.Y.Z`.
+- To release: `bun pm version X.Y.Z --no-git-tag-version` (bumps `package.json`), add an entry at the top of `CHANGELOG.md`, commit `chore: release X.Y.Z`, then `git tag vX.Y.Z && git push origin main vX.Y.Z`.
 - `.github/workflows/publish.yml` runs on `v*` tags. It builds linux/amd64 and linux/arm64, pushes `ghcr.io/<owner>/<repo>` as `X.Y.Z`, `X.Y`, `X` and `latest`, then creates the GitHub Release with generated notes. The Dockerfile renders the pages, so a broken build fails before anything is pushed.
 - Production runs in boxx as one app answering both hostnames:
   `boxx install ghcr.io/plainwork/boxxup:latest --host boxxup.com --host get.boxxup.com --redirect-host www.boxxup.com`
@@ -38,7 +38,7 @@ Same model as markgarrigan/dotcom: a tag is the release, and nothing runs on bra
 
 ## The installer at get.boxxup.com
 
-`curl https://get.boxxup.com | sh` installs boxx. `nginx.conf` has a second server block for `get.*` that answers `/` with `install.sh` as text/plain (no redirect, because `curl` without `-L` won't follow one). `src/installer.mjs` writes `site/install.sh`: it reads `plainwork/boxx` main's current commit from git's smart-HTTP ref list (not the GitHub API, so CI never hits rate limits), fetches `install.sh` at that commit, and stamps two comment lines after the shebang: the commit and build date, and a link to the file at that commit. The Dockerfile runs it after `ADD`ing the ref list, which re-checks the list on every build, so a new boxx commit busts the cache. A change to the installer reaches get.boxxup.com with the next site release. `npm run installer` does the same locally, and `npm run dev` then routes `get.localhost` like nginx does (`site/install.sh` is gitignored).
+`curl https://get.boxxup.com | sh` installs boxx. `nginx.conf` has a second server block for `get.*` that answers `/` with `install.sh` as text/plain (no redirect, because `curl` without `-L` won't follow one). `src/installer.mjs` writes `site/install.sh`: it reads `plainwork/boxx` main's current commit from git's smart-HTTP ref list (not the GitHub API, so CI never hits rate limits), fetches `install.sh` at that commit, and stamps two comment lines after the shebang: the commit and build date, and a link to the file at that commit. The Dockerfile runs it after `ADD`ing the ref list, which re-checks the list on every build, so a new boxx commit busts the cache. A change to the installer reaches get.boxxup.com with the next site release. `bun run installer` does the same locally, and `bun run dev` then routes `get.localhost` like nginx does (`site/install.sh` is gitignored).
 
 In boxx, the app needs `get.boxxup.com` as one of its hostnames.
 

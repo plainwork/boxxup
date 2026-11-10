@@ -13,8 +13,8 @@ curl https://get.boxxup.com | sh
 ## Develop
 
 ```sh
-npm install
-npm run dev   # http://localhost:4321
+bun install
+bun run dev   # http://localhost:4321
 ```
 
 A static generator (`src/build.mjs`) renders the pages from `src/content.mjs`, and Tailwind compiles `src/site.css`.

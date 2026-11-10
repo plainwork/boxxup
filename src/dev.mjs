@@ -1,8 +1,8 @@
-// `npm run dev`: one terminal for local work.
+// `bun run dev`: one terminal for local work.
 // Re-renders the pages when src/ changes, recompiles the CSS when it changes,
 // and serves site/ at http://localhost:4321 (PORT overrides it). Ctrl-C stops everything.
 import { spawn } from "node:child_process";
-import { createReadStream, statSync } from "node:fs";
+import { createReadStream, statSync, watch } from "node:fs";
 import { createServer } from "node:http";
 import { dirname, extname, join, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -11,12 +11,16 @@ const APP = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SITE = join(APP, "site");
 const PORT = Number(process.env.PORT) || 4321;
 
+// Render now, then again whenever a file in src/ changes. A failed render waits for the next save.
+let build, pending;
+const render = () => { build?.kill(); build = spawn(process.execPath, ["src/build.mjs"], { cwd: APP, stdio: "inherit" }); };
+render();
+watch(join(APP, "src"), { recursive: true }, () => { clearTimeout(pending); pending = setTimeout(render, 50); });
+
 const children = [
-  // Node reruns the build whenever a file in src/ changes.
-  spawn(process.execPath, ["--watch-path=src", "src/build.mjs"], { cwd: APP, stdio: "inherit" }),
-  spawn(join(APP, "node_modules", ".bin", "tailwindcss"), ["-i", "src/site.css", "-o", "site/assets/css/site.css", "--watch=always"], { cwd: APP, stdio: "inherit" }),
+  spawn(process.execPath, [join(APP, "node_modules", ".bin", "tailwindcss"), "-i", "src/site.css", "-o", "site/assets/css/site.css", "--watch=always"], { cwd: APP, stdio: "inherit" }),
 ];
-const stop = () => { for (const c of children) c.kill(); process.exit(); };
+const stop = () => { build?.kill(); for (const c of children) c.kill(); process.exit(); };
 process.on("SIGINT", stop);
 process.on("SIGTERM", stop);
 for (const c of children) c.on("exit", (code) => { if (code) { console.error(`dev: a watcher exited with ${code}`); stop(); } });
@@ -35,7 +39,7 @@ createServer((req, res) => {
   // get.* answers with the installer, like nginx.conf. Try: curl http://get.localhost:4321
   if (/^get\./.test(req.headers.host || "")) {
     const sh = path === "/" && file(join(SITE, "install.sh"));
-    if (!sh) { res.writeHead(404, { "content-type": "text/plain" }); return res.end(path === "/" ? "site/install.sh is missing: run npm run installer\n" : "404\n"); }
+    if (!sh) { res.writeHead(404, { "content-type": "text/plain" }); return res.end(path === "/" ? "site/install.sh is missing: run bun run installer\n" : "404\n"); }
     res.writeHead(200, { "content-type": "text/plain; charset=utf-8", "cache-control": "no-cache" });
     return createReadStream(sh).pipe(res);
   }
