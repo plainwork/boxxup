@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.6 (2026-11-09)
+
+### Changes
+
+* run on bun instead of npm and node: bun.lock replaces package-lock.json, and the image builds on oven/bun
+
 ## 0.1.5 (2026-11-07)
 
 ### Changes
